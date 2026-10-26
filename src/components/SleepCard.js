@@ -26,7 +26,9 @@ const SleepCard = ({ record, onPress, onDelete }) => {
       <View style={[styles.header, { borderBottomColor: colors.borderLight }]}>
         <View style={styles.dateGroup}>
           <Icon name="calendar" size={14} color={colors.textSecondary} style={styles.dateIcon} />
-          <Text style={[styles.date, { color: colors.text }]}>{formatDate(record.date, 'EEEE, MMM d')}</Text>
+          <Text style={[styles.date, { color: colors.text }]} numberOfLines={1}>
+            {formatDate(record.date, 'EEEE, MMM d')}
+          </Text>
         </View>
 
         <View style={styles.headerBadges}>
@@ -41,6 +43,17 @@ const SleepCard = ({ record, onPress, onDelete }) => {
             <Icon name={qualityIcon} size={12} color={qualityColor} style={styles.qualityIcon} />
             <Text style={[styles.qualityText, { color: qualityColor }]}>{qualityLabel}</Text>
           </View>
+
+          {onDelete && (
+            <TouchableOpacity 
+              style={[styles.deleteBtn, { backgroundColor: colors.errorSoft }]} 
+              onPress={() => onDelete(record.id)}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+              activeOpacity={0.7}
+            >
+              <Icon name="trash-2" size={13} color={colors.error} />
+            </TouchableOpacity>
+          )}
         </View>
       </View>
       
@@ -63,16 +76,6 @@ const SleepCard = ({ record, onPress, onDelete }) => {
           </View>
         </View>
       </View>
-
-      {onDelete && (
-        <TouchableOpacity 
-          style={styles.deleteBtn} 
-          onPress={() => onDelete(record.id)}
-          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-        >
-          <Icon name="trash-2" size={16} color={colors.error} />
-        </TouchableOpacity>
-      )}
     </TouchableOpacity>
   );
 };
@@ -104,18 +107,22 @@ const styles = StyleSheet.create({
   dateGroup: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
+    marginRight: 6,
   },
   dateIcon: {
     marginRight: 6,
   },
   date: {
-    fontSize: 14,
+    fontSize: 13,
     color: colors.text,
     fontWeight: '700',
+    flexShrink: 1,
   },
   headerBadges: {
     flexDirection: 'row',
     alignItems: 'center',
+    flexShrink: 0,
   },
   goalBadge: {
     flexDirection: 'row',
@@ -194,10 +201,12 @@ const styles = StyleSheet.create({
     color: colors.text,
   },
   deleteBtn: {
-    position: 'absolute',
-    top: 14,
-    right: 14,
-    padding: 6,
+    width: 26,
+    height: 24,
+    borderRadius: 7,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 6,
   }
 });
 

@@ -33,8 +33,8 @@ const TabBarIcon = ({ routeName, focused, colors, isDark }) => {
     case 'Streak':
       iconName = focused ? 'flame' : 'flame-outline';
       break;
-    case 'Stats':
-      iconName = focused ? 'stats-chart' : 'stats-chart-outline';
+    case 'History':
+      iconName = focused ? 'time' : 'time-outline';
       break;
     case 'Profile':
       iconName = focused ? 'person' : 'person-outline';
@@ -66,17 +66,17 @@ const TabBarIcon = ({ routeName, focused, colors, isDark }) => {
 const HeaderBrand = ({ colors }) => (
   <View style={styles.headerBrand}>
     <Ionicons name="moon" size={20} color={colors.primary} />
-    <Text style={[styles.headerBrandText, { color: colors.text }]}>Somno</Text>
+    <Text style={[styles.headerBrandText, { color: colors.text }]}>Khythms</Text>
   </View>
 );
 
-const HeaderSettingsBtn = ({ onPress, colors }) => (
+const HeaderProfileBtn = ({ onPress, colors }) => (
   <TouchableOpacity 
     style={[styles.headerBtn, { backgroundColor: colors.surfaceSubtle }]} 
     onPress={onPress}
     activeOpacity={0.7}
   >
-    <Ionicons name="settings-outline" size={20} color={colors.text} />
+    <Ionicons name="person-outline" size={20} color={colors.text} />
   </TouchableOpacity>
 );
 
@@ -135,7 +135,7 @@ const MainTabs = () => {
           title: 'Overview',
           headerLeft: () => <HeaderBrand colors={colors} />,
           headerRight: () => (
-            <HeaderSettingsBtn onPress={() => navigation.navigate('Settings')} colors={colors} />
+            <HeaderProfileBtn onPress={() => navigation.navigate('Profile')} colors={colors} />
           ),
         })} 
       />
@@ -150,9 +150,20 @@ const MainTabs = () => {
         options={{ title: 'Streak' }}
       />
       <Tab.Screen 
-        name="Stats" 
-        component={StatsScreen} 
-        options={{ title: 'Trends' }}
+        name="History" 
+        component={HistoryScreen} 
+        options={({ navigation }) => ({
+          title: 'History',
+          headerRight: () => (
+            <TouchableOpacity 
+              style={[styles.headerBtn, { backgroundColor: colors.surfaceSubtle }]}
+              onPress={() => navigation.navigate('LogSleep')}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="add" size={22} color={colors.primary} />
+            </TouchableOpacity>
+          ),
+        })}
       />
       <Tab.Screen 
         name="Profile" 
@@ -221,10 +232,10 @@ const AppNavigator = () => {
             />
             <Stack.Screen 
               name="Settings" 
-              component={SettingsScreen} 
+              component={ProfileScreen} 
               options={{
                 headerShown: true,
-                title: 'Settings & Goals',
+                title: 'Profile & Settings',
                 headerStyle: { 
                   backgroundColor: colors.surface,
                   borderBottomColor: colors.borderLight,

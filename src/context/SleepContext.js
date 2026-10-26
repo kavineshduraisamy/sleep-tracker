@@ -28,8 +28,14 @@ export const SleepProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [detectedSession, setDetectedSession] = useState(null);
 
-  const checkDetected = useCallback(async (currentRecords) => {
+  const checkDetected = useCallback(async (currentRecords, currentSettings) => {
     try {
+      const activeSettings = currentSettings || settings;
+      if (activeSettings && activeSettings.screenLockTrackingEnabled === false) {
+        setDetectedSession(null);
+        return;
+      }
+
       const session = await getDetectedSleepSession();
       if (session.hasSession) {
         const recs = currentRecords || records;
@@ -43,7 +49,7 @@ export const SleepProvider = ({ children }) => {
     } catch (e) {
       console.error('Failed to check detected session', e);
     }
-  }, [records]);
+  }, [records, settings]);
 
   const loadData = async () => {
     try {
@@ -56,7 +62,7 @@ export const SleepProvider = ({ children }) => {
       setSettings(storedSettings);
       setUserProfile(storedProfile);
       setHasOnboardedState(onboardedStatus);
-      await checkDetected(storedRecords);
+      await checkDetected(storedRecords, storedSettings);
     } catch (error) {
       console.error(error);
     } finally {
@@ -86,6 +92,11 @@ export const SleepProvider = ({ children }) => {
   const updateSettings = async (newSettings) => {
     const updated = await saveSettings({ ...settings, ...newSettings });
     setSettings(updated);
+    if (newSettings.screenLockTrackingEnabled === false) {
+      setDetectedSession(null);
+    } else if (newSettings.screenLockTrackingEnabled === true) {
+      await checkDetected(records, updated);
+    }
   };
 
   const completeOnboarding = async (profile) => {

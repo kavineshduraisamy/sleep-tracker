@@ -58,7 +58,7 @@ const OnboardingScreen = () => {
         <View style={[styles.iconCircle, { backgroundColor: colors.primarySoft, borderColor: `${colors.primary}25` }]}>
           <Icon name="moon" size={36} color={colors.primary} />
         </View>
-        <Text style={[styles.title, { color: colors.text }]}>Welcome to Somno</Text>
+        <Text style={[styles.title, { color: colors.text }]}>Welcome to Khythms</Text>
         <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
           Set up your personal sleep profile for tailored recovery insights.
         </Text>

@@ -8,6 +8,7 @@ const ONBOARDED_KEY = '@has_onboarded';
 const DEFAULT_SETTINGS = {
   sleepGoalMinutes: 480, // 8 hours
   notificationsEnabled: true,
+  screenLockTrackingEnabled: true, // Screen lock auto sleep detection
   theme: 'light', // 'light' | 'dark'
 };
 

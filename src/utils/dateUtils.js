@@ -1,4 +1,4 @@
-import { format, parseISO, isSameDay, startOfDay, subDays, differenceInMinutes, isValid, addDays } from 'date-fns';
+import { format, parseISO, isSameDay, subDays, isValid } from 'date-fns';
 
 /**
  * Format a date string to a displayable string
@@ -38,6 +38,7 @@ export const getTodayStr = () => {
   return format(new Date(), 'yyyy-MM-dd');
 };
 
-export const getYesterdayStr = () => {
-  return format(subDays(new Date(), 1), 'yyyy-MM-dd');
+export const getYesterdayStr = (date = new Date()) => {
+  const d = typeof date === 'string' ? parseISO(date) : date;
+  return format(subDays(d, 1), 'yyyy-MM-dd');
 };

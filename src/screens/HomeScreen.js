@@ -183,10 +183,10 @@ const HomeScreen = ({ navigation }) => {
       </View>
 
       {/* Target & Streak Cards */}
-      <SleepGoalCard 
+      {/* <SleepGoalCard 
         currentMinutes={todayRecord ? todayRecord.durationMinutes : 0} 
         goalMinutes={goalMinutes} 
-      />
+      /> */}
 
       <StreakCard 
         currentStreak={currentStreak} 

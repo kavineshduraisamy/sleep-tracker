@@ -23,7 +23,7 @@ export const SleepContext = createContext();
 export const SleepProvider = ({ children }) => {
   const [records, setRecords] = useState([]);
   const [settings, setSettings] = useState(null);
-  const [userProfile, setUserProfile] = useState({ name: '', dob: '', gender: 'Rather not to say' });
+  const [userProfile, setUserProfile] = useState({ name: '', dob: '', gender: '' });
   const [hasOnboarded, setHasOnboardedState] = useState(true); // default true while loading
   const [loading, setLoading] = useState(true);
   const [detectedSession, setDetectedSession] = useState(null);

@@ -38,7 +38,7 @@ const ProfileScreen = ({ navigation }) => {
   // User Profile
   const name = userProfile?.name || 'Sleep Explorer';
   const dobStr = userProfile?.dob || '';
-  const gender = userProfile?.gender || 'Rather not to say';
+  const gender = userProfile?.gender || '';
   const age = dobStr ? calculateAge(dobStr) : null;
   const formattedDob = dobStr ? format(parseISO(dobStr), 'MMMM do, yyyy') : 'Not set';
 
@@ -191,10 +191,12 @@ const ProfileScreen = ({ navigation }) => {
               </View>
             )}
 
-            <View style={[styles.bioPill, { backgroundColor: colors.surfaceSubtle }]}>
-              <Ionicons name="person-outline" size={12} color={colors.textSecondary} style={{ marginRight: 4 }} />
-              <Text style={[styles.bioPillText, { color: colors.textSecondary }]}>{gender}</Text>
-            </View>
+            {!!gender && (
+              <View style={[styles.bioPill, { backgroundColor: colors.surfaceSubtle }]}>
+                <Ionicons name="person-outline" size={12} color={colors.textSecondary} style={{ marginRight: 4 }} />
+                <Text style={[styles.bioPillText, { color: colors.textSecondary }]}>{gender}</Text>
+              </View>
+            )}
 
             <View style={[styles.bioPill, { backgroundColor: colors.surfaceSubtle }]}>
               <Ionicons name="bed-outline" size={12} color={colors.textSecondary} style={{ marginRight: 4 }} />

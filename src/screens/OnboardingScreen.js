@@ -23,8 +23,10 @@ const OnboardingScreen = () => {
   const [dob, setDob] = useState(subYears(new Date(), 24)); // Default ~24 years
   const [hasPickedDob, setHasPickedDob] = useState(false);
   const [dobOpen, setDobOpen] = useState(false);
-  const [gender, setGender] = useState('Male');
+  const [gender, setGender] = useState('');
+  const [genderDropdownOpen, setGenderDropdownOpen] = useState(false);
 
+  const selectedGenderObj = GENDERS.find(g => g.id === gender) || null;
   const calculatedAge = hasPickedDob ? calculateAge(dob) : null;
 
   const handleFinish = () => {
@@ -35,6 +37,11 @@ const OnboardingScreen = () => {
 
     if (!hasPickedDob) {
       Alert.alert('Date of Birth Required', 'Please select your date of birth to calculate your sleep age.');
+      return;
+    }
+
+    if (!gender) {
+      Alert.alert('Gender Required', 'Please select your gender from the dropdown.');
       return;
     }
 
@@ -136,44 +143,87 @@ const OnboardingScreen = () => {
           />
         </View>
 
-        {/* Gender Selector */}
+        {/* Gender Dropdown Selector */}
         <View style={styles.fieldGroup}>
           <View style={styles.fieldHeader}>
             <Icon name="users" size={15} color={colors.primary} style={styles.fieldIcon} />
             <Text style={[styles.fieldLabel, { color: colors.text }]}>Gender</Text>
           </View>
 
-          <View style={styles.genderRow}>
-            {GENDERS.map(g => {
-              const isSelected = gender === g.id;
-              return (
-                <TouchableOpacity
-                  key={g.id}
-                  style={[
-                    styles.genderChip, 
-                    { backgroundColor: colors.surfaceSubtle, borderColor: colors.borderLight },
-                    isSelected && { backgroundColor: colors.primary, borderColor: colors.primary }
-                  ]}
-                  onPress={() => setGender(g.id)}
-                  activeOpacity={0.8}
-                >
-                  <Icon 
-                    name={g.icon} 
-                    size={14} 
-                    color={isSelected ? '#FFFFFF' : colors.textSecondary} 
-                    style={styles.genderChipIcon} 
-                  />
-                  <Text style={[
-                    styles.genderChipText, 
-                    { color: colors.textSecondary },
-                    isSelected && { color: '#FFFFFF', fontWeight: '700' }
-                  ]}>
-                    {g.label}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
+          <TouchableOpacity 
+            style={[
+              styles.dropdownBtn, 
+              { backgroundColor: colors.surfaceSubtle, borderColor: colors.borderLight },
+              gender ? { borderColor: `${colors.primary}50` } : null,
+              genderDropdownOpen && { borderColor: `${colors.primary}70` }
+            ]}
+            onPress={() => setGenderDropdownOpen(!genderDropdownOpen)}
+            activeOpacity={0.8}
+          >
+            <View style={styles.dropdownBtnLeft}>
+              <Icon 
+                name={selectedGenderObj ? selectedGenderObj.icon : 'users'} 
+                size={18} 
+                color={selectedGenderObj ? colors.primary : colors.textMuted} 
+              />
+              <Text style={[
+                styles.dropdownBtnText, 
+                { color: colors.textMuted, fontWeight: '500' },
+                selectedGenderObj && { color: colors.text, fontWeight: '700' }
+              ]}>
+                {selectedGenderObj ? selectedGenderObj.label : 'Select your gender'}
+              </Text>
+            </View>
+            <Icon 
+              name={genderDropdownOpen ? "chevron-up" : "chevron-down"} 
+              size={18} 
+              color={genderDropdownOpen ? colors.primary : colors.textMuted} 
+            />
+          </TouchableOpacity>
+
+          {/* Expandable Dropdown List */}
+          {genderDropdownOpen && (
+            <View style={[styles.dropdownMenu, { backgroundColor: colors.surface, borderColor: colors.borderLight }]}>
+              {GENDERS.map((g, idx) => {
+                const isSelected = gender === g.id;
+                const isLast = idx === GENDERS.length - 1;
+                return (
+                  <TouchableOpacity
+                    key={g.id}
+                    style={[
+                      styles.dropdownItem,
+                      isSelected && { backgroundColor: colors.primarySoft },
+                      !isLast && { borderBottomWidth: 1, borderBottomColor: colors.borderLight }
+                    ]}
+                    onPress={() => {
+                      setGender(g.id);
+                      setGenderDropdownOpen(false);
+                    }}
+                    activeOpacity={0.7}
+                  >
+                    <View style={styles.dropdownItemLeft}>
+                      <Icon 
+                        name={g.icon} 
+                        size={16} 
+                        color={isSelected ? colors.primary : colors.textSecondary} 
+                        style={{ marginRight: 10 }} 
+                      />
+                      <Text style={[
+                        styles.dropdownItemText, 
+                        { color: isSelected ? colors.primary : colors.text },
+                        isSelected && { fontWeight: '700' }
+                      ]}>
+                        {g.label}
+                      </Text>
+                    </View>
+                    {isSelected && (
+                      <Icon name="check" size={16} color={colors.primary} />
+                    )}
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          )}
         </View>
 
         {/* Privacy Note */}
@@ -319,35 +369,51 @@ const styles = StyleSheet.create({
     color: colors.text,
     fontWeight: '700',
   },
-  genderRow: {
-    flexDirection: 'column',
-    gap: 8,
-  },
-  genderChip: {
+  dropdownBtn: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: colors.surfaceSubtle,
     borderRadius: 14,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
     borderWidth: 1,
     borderColor: colors.borderLight,
+    paddingHorizontal: 16,
+    height: 52,
   },
-  genderChipActive: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
+  dropdownBtnLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  genderChipIcon: {
-    marginRight: 10,
+  dropdownBtnText: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: colors.text,
+    marginLeft: 10,
   },
-  genderChipText: {
+  dropdownMenu: {
+    marginTop: 8,
+    borderRadius: 16,
+    borderWidth: 1,
+    overflow: 'hidden',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    elevation: 3,
+  },
+  dropdownItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+  },
+  dropdownItemLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  dropdownItemText: {
     fontSize: 14,
     fontWeight: '600',
-    color: colors.textSecondary,
-  },
-  genderChipTextActive: {
-    color: '#FFFFFF',
-    fontWeight: '700',
   },
   privacyNote: {
     flexDirection: 'row',

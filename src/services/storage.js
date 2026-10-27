@@ -15,7 +15,7 @@ const DEFAULT_SETTINGS = {
 const DEFAULT_PROFILE = {
   name: '',
   dob: '', // 'YYYY-MM-DD'
-  gender: 'Rather not to say', // 'Male' | 'Female' | 'Rather not to say'
+  gender: '', // 'Male' | 'Female' | 'Rather not to say' | ''
 };
 
 /**
